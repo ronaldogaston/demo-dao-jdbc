@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -90,5 +93,46 @@ public class VendedorDaoJDBC implements VendedorDao{
 	public List<Vendedor> findAll() {
 
 		return null;
+	}
+
+	@Override
+	public List<Vendedor> findByDepartamento(Departamento departamento) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"SELECT vendedor.*, departamento.Nome as DepNome "
+					+ "FROM vendedor INNER JOIN departamento "
+					+ "ON vendedor.IdDepartamento = departamento.Id "
+					+ "WHERE Departamento.Id = ? "
+					+ "ORDER BY Nome");
+			
+			st.setInt(1, departamento.getId());
+			rs = st.executeQuery();
+			
+			List<Vendedor> list = new ArrayList<>();
+			Map<Integer, Departamento> map = new HashMap<>(); // Será guardado qualquer departamento instaciado
+						
+			while (rs.next()) {
+				
+				Departamento dep = map.get(rs.getInt("IdDepartamento")); // Busca o ID do Departamento do Banco
+				
+				if (dep == null) { // Realiza a instanciação caso o 'dep' tenha vindo como nulo acima
+					dep = instanciaDepartamento(rs);
+					map.put(rs.getInt("IdDepartamento"), dep);
+				}
+				Vendedor vendedor = instanciaVendedor(rs, dep);
+				list.add(vendedor);
+			}
+			return list;
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
 	}
 }
