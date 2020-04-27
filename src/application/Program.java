@@ -24,6 +24,13 @@ public class Program {
 		for (Vendedor x : list) {
 			System.out.println(x);
 		}
+		
+		System.out.println("\n === TESTE 3: Vendedor FindAll (Buscando todos os vendedores) ===");
+		list = vendedorDao.findAll();
+	
+		for (Vendedor x : list) {
+			System.out.println(x);
+		}
 	}
 
 }
