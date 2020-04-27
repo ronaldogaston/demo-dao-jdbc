@@ -1,5 +1,6 @@
 package model.dao;
 
+import db.DB;
 import model.dao.impl.VendedorDaoJDBC;
 
 public class FabricaDao {
@@ -13,7 +14,7 @@ public class FabricaDao {
 	 */
 	
 	public static VendedorDao cadastroVendedorDao() { 
-		return new VendedorDaoJDBC();
+		return new VendedorDaoJDBC(DB.getConnection());
 	}
 
 }
