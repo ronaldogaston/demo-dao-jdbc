@@ -1,7 +1,6 @@
 package model.dao.impl;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +12,6 @@ import java.util.Map;
 
 import db.DB;
 import db.DbException;
-import jdk.jshell.StatementSnippet;
 import model.dao.VendedorDao;
 import model.entities.Departamento;
 import model.entities.Vendedor;
@@ -64,12 +62,33 @@ public class VendedorDaoJDBC implements VendedorDao{
 		finally {
 			DB.closeStatement(st);
 		}
-		
 	}
 
 	@Override
-	public void update(Vendedor obj) {
+	public void update(Vendedor vendedor) {
+PreparedStatement st = null;
 		
+		try {
+			st = conn.prepareStatement(
+					"UPDATE vendedor "
+					+ "SET Nome = ?, Email = ?, DataNascimento = ?, SalarioBase = ?, IdDepartamento = ? "
+					+ "WHERE Id = ?");
+			
+			st.setString(1, vendedor.getNome());
+			st.setString(2, vendedor.getEmail());
+			st.setDate(3, new java.sql.Date(vendedor.getDataNascimento().getTime()));
+			st.setDouble(4, vendedor.getSalarioBase());
+			st.setInt(5, vendedor.getDepartamento().getId());
+			st.setInt(6, vendedor.getId());
+			
+			st.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
