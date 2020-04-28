@@ -93,7 +93,28 @@ PreparedStatement st = null;
 
 	@Override
 	public void deleteById(Integer id) {
+		PreparedStatement st = null;
 		
+		try {
+			st = conn.prepareStatement("DELETE FROM vendedor WHERE Id = ?");
+			
+			st.setInt(1, id);
+			
+			int linhasAfetadas = st.executeUpdate();
+			
+			if (linhasAfetadas == 0) {
+				throw new DbException("Nenhuma linha foi afetada.");
+			}
+			else {
+				System.out.println("Deletado com sucesso!");
+			}
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
