@@ -21,7 +21,7 @@ public class Program {
 		Vendedor vendedor = vendedorDao.findById(3);
 		System.out.println(vendedor);
 
-		System.out.println("\n === TESTE 2: Vendedor FindByDepartamento (Buscando departamento por ID) ===");
+		System.out.println("\n === TESTE 2: Vendedor FindByDepartamento (Buscando vendedor pela id do departamento) ===");
 		Departamento departamento = new Departamento(2, null);
 		List<Vendedor> list = vendedorDao.findByDepartamento(departamento);
 		

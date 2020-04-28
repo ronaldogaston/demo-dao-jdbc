@@ -66,7 +66,7 @@ public class VendedorDaoJDBC implements VendedorDao{
 
 	@Override
 	public void update(Vendedor vendedor) {
-PreparedStatement st = null;
+		PreparedStatement st = null;
 		
 		try {
 			st = conn.prepareStatement(
